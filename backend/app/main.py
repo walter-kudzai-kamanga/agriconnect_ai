@@ -27,7 +27,10 @@ async def health_check():
 
 # Import and include routers
 from app.mcp_server.mcp_tools import router as mcp_router
+from app.admin.routes import router as admin_router
+
 app.include_router(mcp_router, prefix="/api/v1/mcp", tags=["MCP Tools"])
+app.include_router(admin_router, prefix="/api/v1/admin", tags=["Admin Dashboard"])
 
 @app.get("/api/v1/health")
 async def root():
