@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGRICONNECT </title>
+    <title>AgriConnect</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -25,6 +25,7 @@
             --danger: #f44336;
             --available: #2196F3;
             --local: #9C27B0;
+            --info: #2196F3;
         }
         
         body {
@@ -43,7 +44,7 @@
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 400px;
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: auto auto 1fr auto;
             gap: 20px;
             height: calc(100vh - 40px);
         }
@@ -102,9 +103,8 @@
         .stats-bar {
             display: flex;
             gap: 30px;
-            height: 100px;
             align-items: center;
-            padding: auto;
+            
         }
         
         .stat {
@@ -156,6 +156,63 @@
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
         }
         
+        /* Overview Panel */
+        .overview-panel {
+            grid-column: 1 / -1;
+            background: rgba(10, 42, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .overview-card {
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .overview-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .overview-card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .overview-card.info {
+            border-left-color: var(--info);
+        }
+        
+        .overview-title {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .overview-content {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .crop-list {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .crop-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
         .map-container {
             position: relative;
             border-radius: 15px;
@@ -163,7 +220,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
             grid-column: 1;
-            grid-row: 2;
+            grid-row: 3;
         }
         
         #map {
@@ -235,7 +292,7 @@
             flex-direction: column;
             gap: 20px;
             grid-column: 2;
-            grid-row: 2;
+            grid-row: 3;
         }
         
         .truck-info {
@@ -566,22 +623,26 @@
         @media (max-width: 1200px) {
             .dashboard {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr auto auto;
+                grid-template-rows: auto auto 1fr auto auto;
+            }
+            
+            .overview-panel {
+                grid-template-columns: repeat(2, 1fr);
             }
             
             .map-container {
                 grid-column: 1;
-                grid-row: 2;
+                grid-row: 3;
                 min-height: 500px;
             }
             
             .info-panel {
                 grid-column: 1;
-                grid-row: 3;
+                grid-row: 4;
             }
             
             .ai-panel {
-                grid-row: 4;
+                grid-row: 5;
             }
         }
         
@@ -644,12 +705,89 @@
             border-radius: 50%;
             margin-right: 8px;
         }
+        
+        /* Market Insights Panel */
+        .market-insights {
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .insight-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }
+        
+        .price-trend {
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+        
+        .price-trend.down {
+            color: var(--danger);
+        }
+        
+        /* Notifications Panel */
+        .notifications-panel {
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .notification {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid var(--warning);
+        }
+        
+        .notification.critical {
+            border-left-color: var(--danger);
+            background: rgba(244, 67, 54, 0.1);
+        }
+        
+        .notification.info {
+            border-left-color: var(--info);
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .export-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .voice-btn {
+            background: var(--accent);
+            border: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="dashboard">
-            <header>
+           
                 <div class="logo">
                     <div class="logo-icon">
                         <i class="fas fa-tractor"></i>
@@ -661,35 +799,102 @@
                 </div>
                 
                 <div class="stats-bar">
-                    <div class="stat">
-                        <div class="stat-value">18</div>
-                        <div class="stat-label">ACTIVE TRUCKS</div>
+                  
+                    <div class="user-controls">
+                        <button class="btn">
+                            <i class="fas fa-bell"></i>
+                            Alerts
+                        </button>
+                        <button class="btn">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            New Route
+                        </button>
                     </div>
-                    <div class="stat">
-                        <div class="stat-value">6</div>
-                        <div class="stat-label">LOCAL DELIVERIES</div>
+                </div>
+          
+            
+            <!-- Overview Panel -->
+            <div class="overview-panel">
+                <div class="overview-card">
+                    <div class="overview-title">
+                        <i class="fas fa-shipping-fast"></i>
+                        Total Orders in Progress
                     </div>
-                    <div class="stat">
-                        <div class="stat-value">94%</div>
-                        <div class="stat-label">ON-TIME DELIVERY</div>
+                    <div class="overview-content">24</div>
+                    <div class="crop-list">
+                        <div class="crop-item">
+                            <span>Maize:</span>
+                            <span>10,500kg</span>
+                        </div>
+                        <div class="crop-item">
+                            <span>Tomatoes:</span>
+                            <span>5,200kg</span>
+                        </div>
+                        <div class="crop-item">
+                            <span>Vegetables:</span>
+                            <span>3,800kg</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="user-controls">
-                    <button class="btn">
-                        <i class="fas fa-bell"></i>
-                        Alerts
-                    </button>
-                    <button class="btn">
-                        <i class="fas fa-cog"></i>
-                        Settings
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
-                        New Route
-                    </button>
+                <div class="overview-card info">
+                    <div class="overview-title">
+                        <i class="fas fa-clock"></i>
+                        Average Delivery Time
+                    </div>
+                    <div class="overview-content">4.2 hrs</div>
+                    <div class="crop-list">
+                        <div class="crop-item">
+                            <span>Local:</span>
+                            <span>2.1 hrs</span>
+                        </div>
+                        <div class="crop-item">
+                            <span>Inter-city:</span>
+                            <span>6.3 hrs</span>
+                        </div>
+                    </div>
                 </div>
-            </header>
+                
+                <div class="overview-card warning">
+                    <div class="overview-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Spoilage Risk
+                    </div>
+                    <div class="overview-content">8%</div>
+                    <div class="crop-list">
+                        <div class="crop-item">
+                            <span>High Risk:</span>
+                            <span>3 shipments</span>
+                        </div>
+                        <div class="crop-item">
+                            <span>Moderate:</span>
+                            <span>5 shipments</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-card danger">
+                    <div class="overview-title">
+                        <i class="fas fa-truck-loading"></i>
+                        Resource Utilization
+                    </div>
+                    <div class="overview-content">78%</div>
+                    <div class="crop-list">
+                        <div class="crop-item">
+                            <span>Empty Trips:</span>
+                            <span>22%</span>
+                        </div>
+                        <div class="crop-item">
+                            <span>Optimal Routes:</span>
+                            <span>15/18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div class="map-container map-3d">
                 <div id="map"></div>
@@ -718,15 +923,15 @@
                 <div class="legend">
                     <div class="legend-item">
                         <div class="legend-color" style="background-color: #4CAF50;"></div>
-                        <span>Inter-City Routes</span>
+                        <span>On-time</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background-color: #9C27B0;"></div>
-                        <span>Local Routes</span>
+                        <div class="legend-color" style="background-color: #FF9800;"></div>
+                        <span>At Risk</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background-color: #2196F3;"></div>
-                        <span>Available Trucks</span>
+                        <div class="legend-color" style="background-color: #f44336;"></div>
+                        <span>Delayed</span>
                     </div>
                 </div>
             </div>
@@ -776,6 +981,41 @@
                     </div>
                 </div>
                 
+                <!-- Market Insights -->
+                <div class="market-insights">
+                    <h3><i class="fas fa-chart-line"></i> Market Insights</h3>
+                    <div class="insight-item">
+                        <span>Tomatoes (Mbare)</span>
+                        <span class="price-trend">$2.50/kg ↗</span>
+                    </div>
+                    <div class="insight-item">
+                        <span>Maize (Bulawayo)</span>
+                        <span class="price-trend">$1.20/kg ↘</span>
+                    </div>
+                    <div class="insight-item">
+                        <span>Vegetables (Harare)</span>
+                        <span class="price-trend">$3.10/kg ↗</span>
+                    </div>
+                    <div class="insight-item">
+                        <span>Demand Hotspot</span>
+                        <span style="color: var(--accent);">Mashonaland East</span>
+                    </div>
+                </div>
+                
+                <!-- Notifications -->
+                <div class="notifications-panel">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <div class="notification critical">
+                        <strong>Critical:</strong> Heavy rain expected in Marondera - Cover perishable cargo
+                    </div>
+                    <div class="notification">
+                        <strong>Alert:</strong> Low-capacity farmer needs support in Mazowe Valley
+                    </div>
+                    <div class="notification info">
+                        <strong>Info:</strong> 3 trucks available for assignment
+                    </div>
+                </div>
+                
                 <div class="panel">
                     <h2><i class="fas fa-truck-moving"></i> ACTIVE FLEET</h2>
                     <div class="truck-list">
@@ -800,28 +1040,6 @@
                             </div>
                             <div class="truck-status status-local">IN PROGRESS</div>
                         </div>
-                        
-                        <div class="truck-list-item">
-                            <div class="truck-avatar" style="background: rgba(76, 175, 80, 0.2); color: var(--success);">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="truck-details">
-                                <div class="truck-list-name">Tobacco Express</div>
-                                <div class="truck-list-route">Gweru → Bulawayo <span class="route-type">INTER-CITY</span></div>
-                            </div>
-                            <div class="truck-status status-active">ON TIME</div>
-                        </div>
-                        
-                        <div class="truck-list-item">
-                            <div class="truck-avatar" style="background: rgba(156, 39, 176, 0.2); color: var(--local);">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="truck-details">
-                                <div class="truck-list-name">Dairy Delivery</div>
-                                <div class="truck-list-route">Mazowe Farm → Chitungwiza Market <span class="route-type">LOCAL</span></div>
-                            </div>
-                            <div class="truck-status status-local">IN PROGRESS</div>
-                        </div>
                     </div>
                 </div>
                 
@@ -839,18 +1057,19 @@
                             <div class="truck-status status-available">AVAILABLE</div>
                             <button class="assign-btn">Assign</button>
                         </div>
-                        
-                        <div class="truck-list-item">
-                            <div class="truck-avatar" style="background: rgba(33, 150, 243, 0.2); color: var(--available);">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="truck-details">
-                                <div class="truck-list-name">Crop Mover</div>
-                                <div class="truck-list-route">Available for assignment</div>
-                            </div>
-                            <div class="truck-status status-available">AVAILABLE</div>
-                            <button class="assign-btn">Assign</button>
-                        </div>
+                    </div>
+                    
+                    <!-- Export Buttons -->
+                    <div class="export-buttons">
+                        <button class="export-btn">
+                            <i class="fas fa-file-csv"></i> Export CSV
+                        </button>
+                        <button class="export-btn">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </button>
+                        <button class="export-btn voice-btn">
+                            <i class="fas fa-volume-up"></i> Voice Summary
+                        </button>
                     </div>
                 </div>
             </div>
@@ -889,459 +1108,447 @@
         </div>
     </div>
 
-   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
-<script>
-    // Initialize the map centered on Zimbabwe
-    const map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false
-    }).setView([-19.0154, 29.1549], 8);
-    
-    // Add OpenStreetMap tiles with a custom style
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Define Zimbabwe cities coordinates with proper lat/lng
-    const zimbabweCities = {
-        harare: L.latLng(-17.8252, 31.0335),
-        bulawayo: L.latLng(-20.1325, 28.6265),
-        mutare: L.latLng(-18.9723, 32.6702),
-        gweru: L.latLng(-19.4566, 29.8197),
-        masvingo: L.latLng(-20.0707, 30.8276),
-        marondera: L.latLng(-18.1853, 31.5519),
-        chitungwiza: L.latLng(-18.0000, 31.0833),
-        epworth: L.latLng(-17.8900, 31.1475)
-    };
-    
-    // Define local locations within cities
-    const localLocations = {
-        kamangaFarm: L.latLng(-17.7800, 31.1200),
-        mbareMusika: L.latLng(-17.8400, 31.0300),
-        mazoweFarm: L.latLng(-17.5000, 30.9667),
-        chitungwizaMarket: L.latLng(-18.0000, 31.0700)
-    };
-
-    // Define truck data for Zimbabwe
-    const interCityTrucks = [
-        {
-            id: 1,
-            name: "Maize Hauler",
-            cargo: "Maize",
-            weight: "18.5 tons",
-            route: "Harare → Marondera",
-            driver: "Tendai Moyo",
-            status: "active",
-            color: "#4CAF50",
-            type: "inter-city",
-            start: zimbabweCities.harare,
-            end: zimbabweCities.marondera,
-            currentPosition: zimbabweCities.harare
-        },
-        {
-            id: 2,
-            name: "Tobacco Express",
-            cargo: "Tobacco",
-            weight: "15.2 tons",
-            route: "Gweru → Bulawayo",
-            driver: "James Chidemo",
-            status: "active",
-            color: "#4CAF50",
-            type: "inter-city",
-            start: zimbabweCities.gweru,
-            end: zimbabweCities.bulawayo,
-            currentPosition: zimbabweCities.gweru
-        }
-    ];
-    
-    const localTrucks = [
-        {
-            id: 3,
-            name: "Vegetable Van",
-            cargo: "Fresh Vegetables",
-            weight: "5.2 tons",
-            route: "Kamanga Farm → Mbare Musika",
-            driver: "Anna Marufu",
-            status: "local",
-            color: "#9C27B0",
-            type: "local",
-            start: localLocations.kamangaFarm,
-            end: localLocations.mbareMusika,
-            currentPosition: localLocations.kamangaFarm
-        },
-        {
-            id: 4,
-            name: "Dairy Delivery",
-            cargo: "Milk & Dairy",
-            weight: "3.8 tons",
-            route: "Mazowe Farm → Chitungwiza Market",
-            driver: "Peter Chiweshe",
-            status: "local",
-            color: "#9C27B0",
-            type: "local",
-            start: localLocations.mazoweFarm,
-            end: localLocations.chitungwizaMarket,
-            currentPosition: localLocations.mazoweFarm
-        }
-    ];
-
-    // Store routing controls and markers
-    const routingControls = [];
-    const truckMarkers = [];
-    let activeRoutes = [];
-
-    // Custom icons
-    const farmIcon = L.divIcon({
-        html: `<div class="farm-marker"></div>`,
-        className: 'farm-marker-icon',
-        iconSize: [18, 18],
-        iconAnchor: [9, 9]
-    });
-    
-    const marketIcon = L.divIcon({
-        html: `<div class="market-marker"></div>`,
-        className: 'market-marker-icon',
-        iconSize: [18, 18],
-        iconAnchor: [9, 9]
-    });
-
-    const destinationIcon = L.divIcon({
-        html: `<div class="destination-marker"></div>`,
-        className: 'destination-marker-icon',
-        iconSize: [20, 20],
-        iconAnchor: [10, 20]
-    });
-
-    // Function to create truck icon
-    function createTruckIcon(color) {
-        return L.divIcon({
-            html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px ${color}; display: flex; align-items: center; justify-content: center;">
-                      <i class="fas fa-truck" style="color: white; font-size: 10px;"></i>
-                  </div>`,
-            className: 'truck-marker',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
-        });
-    }
-
-    // Function to create real road routes using OSRM
-    function createRealRoute(truck, index) {
-        // Remove existing route if any
-        if (routingControls[index]) {
-            map.removeControl(routingControls[index]);
-        }
-
-        // Create routing control with OSRM
-        const routingControl = L.Routing.control({
-            waypoints: [
-                truck.start,
-                truck.end
-            ],
-            routeWhileDragging: false,
-            showAlternatives: false,
-            fitSelectedRoutes: false,
-            show: false, // Hide the default instructions panel
-            createMarker: function(i, waypoint, n) {
-                // Don't create default markers
-                return null;
-            },
-            lineOptions: {
-                styles: [
-                    {
-                        color: truck.color,
-                        opacity: 0.7,
-                        weight: truck.type === 'local' ? 4 : 6
-                    }
-                ],
-                extendToWaypoints: false,
-                missingRouteTolerance: 0
-            },
-            router: L.Routing.osrmv1({
-                serviceUrl: 'https://router.project-osrm.org/route/v1',
-                profile: 'driving'
-            })
+    <script>
+        // Your existing JavaScript code for the map and routing goes here
+        // (I've kept it the same as in your previous implementation)
+        
+        // Initialize the map centered on Zimbabwe
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([-19.0154, 29.1549], 8);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        routingControls[index] = routingControl;
+        // Define Zimbabwe cities coordinates
+        const zimbabweCities = {
+            harare: L.latLng(-17.8252, 31.0335),
+            bulawayo: L.latLng(-20.1325, 28.6265),
+            mutare: L.latLng(-18.9723, 32.6702),
+            gweru: L.latLng(-19.4566, 29.8197),
+            masvingo: L.latLng(-20.0707, 30.8276),
+            marondera: L.latLng(-18.1853, 31.5519),
+            chitungwiza: L.latLng(-18.0000, 31.0833),
+            epworth: L.latLng(-17.8900, 31.1475)
+        };
+        
+        // Define local locations within cities
+        const localLocations = {
+            kamangaFarm: L.latLng(-17.7800, 31.1200),
+            mbareMusika: L.latLng(-17.8400, 31.0300),
+            mazoweFarm: L.latLng(-17.5000, 30.9667),
+            chitungwizaMarket: L.latLng(-18.0000, 31.0700)
+        };
 
-        // Store route information when it's found
-        routingControl.on('routesfound', function(e) {
-            const routes = e.routes;
-            if (routes && routes.length > 0) {
-                const route = routes[0];
-                
-                // Store route coordinates for animation
-                activeRoutes[index] = {
-                    coordinates: route.coordinates,
-                    totalDistance: route.summary.totalDistance,
-                    totalTime: route.summary.totalTime,
-                    currentIndex: 0,
-                    progress: 0
-                };
-
-                // Update truck info with real distance and time
-                updateTruckRouteInfo(truck, route.summary);
-                
-                console.log(`Route found for ${truck.name}: ${(route.summary.totalDistance / 1000).toFixed(1)} km, ${(route.summary.totalTime / 60).toFixed(0)} min`);
+        // Define truck data for Zimbabwe
+        const interCityTrucks = [
+            {
+                id: 1,
+                name: "Maize Hauler",
+                cargo: "Maize",
+                weight: "18.5 tons",
+                route: "Harare → Marondera",
+                driver: "Tendai Moyo",
+                status: "active",
+                color: "#4CAF50",
+                type: "inter-city",
+                start: zimbabweCities.harare,
+                end: zimbabweCities.marondera,
+                currentPosition: zimbabweCities.harare
+            },
+            {
+                id: 2,
+                name: "Tobacco Express",
+                cargo: "Tobacco",
+                weight: "15.2 tons",
+                route: "Gweru → Bulawayo",
+                driver: "James Chidemo",
+                status: "active",
+                color: "#4CAF50",
+                type: "inter-city",
+                start: zimbabweCities.gweru,
+                end: zimbabweCities.bulawayo,
+                currentPosition: zimbabweCities.gweru
             }
+        ];
+        
+        const localTrucks = [
+            {
+                id: 3,
+                name: "Vegetable Van",
+                cargo: "Fresh Vegetables",
+                weight: "5.2 tons",
+                route: "Kamanga Farm → Mbare Musika",
+                driver: "Anna Marufu",
+                status: "local",
+                color: "#9C27B0",
+                type: "local",
+                start: localLocations.kamangaFarm,
+                end: localLocations.mbareMusika,
+                currentPosition: localLocations.kamangaFarm
+            },
+            {
+                id: 4,
+                name: "Dairy Delivery",
+                cargo: "Milk & Dairy",
+                weight: "3.8 tons",
+                route: "Mazowe Farm → Chitungwiza Market",
+                driver: "Peter Chiweshe",
+                status: "local",
+                color: "#9C27B0",
+                type: "local",
+                start: localLocations.mazoweFarm,
+                end: localLocations.chitungwizaMarket,
+                currentPosition: localLocations.mazoweFarm
+            }
+        ];
+
+        // Store routing controls and markers
+        const routingControls = [];
+        const truckMarkers = [];
+        let activeRoutes = [];
+
+        // Custom icons
+        const farmIcon = L.divIcon({
+            html: `<div class="farm-marker"></div>`,
+            className: 'farm-marker-icon',
+            iconSize: [18, 18],
+            iconAnchor: [9, 9]
+        });
+        
+        const marketIcon = L.divIcon({
+            html: `<div class="market-marker"></div>`,
+            className: 'market-marker-icon',
+            iconSize: [18, 18],
+            iconAnchor: [9, 9]
         });
 
-        // Add destination marker
-        L.marker(truck.end, {
-            icon: destinationIcon
-        }).addTo(map).bindPopup(`Final Destination: ${truck.route.split('→')[1].trim()}`);
+        const destinationIcon = L.divIcon({
+            html: `<div class="destination-marker"></div>`,
+            className: 'destination-marker-icon',
+            iconSize: [20, 20],
+            iconAnchor: [10, 20]
+        });
 
-        return routingControl;
-    }
+        // Function to create truck icon
+        function createTruckIcon(color) {
+            return L.divIcon({
+                html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px ${color}; display: flex; align-items: center; justify-content: center;">
+                          <i class="fas fa-truck" style="color: white; font-size: 10px;"></i>
+                      </div>`,
+                className: 'truck-marker',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+        }
 
-    // Function to update truck info with real route data
-    function updateTruckRouteInfo(truck, summary) {
-        // This would update your UI with real distance and ETA
-        const distanceKm = (summary.totalDistance / 1000).toFixed(1);
-        const timeMinutes = Math.round(summary.totalTime / 60);
-        
-        console.log(`${truck.name}: ${distanceKm} km, ${timeMinutes} minutes`);
-        
-        // You can update your HTML elements here:
-        // document.querySelector('.route-distance').textContent = `${distanceKm} km`;
-        // document.querySelector('.route-time').textContent = `${timeMinutes} min`;
-    }
+        // Function to create real road routes using OSRM
+        function createRealRoute(truck, index) {
+            // Remove existing route if any
+            if (routingControls[index]) {
+                map.removeControl(routingControls[index]);
+            }
 
-    // Function to animate truck along the real route
-    function animateTruckAlongRoute(truck, index) {
-        const route = activeRoutes[index];
-        if (!route || !route.coordinates) return;
+            // Create routing control with OSRM
+            const routingControl = L.Routing.control({
+                waypoints: [
+                    truck.start,
+                    truck.end
+                ],
+                routeWhileDragging: false,
+                showAlternatives: false,
+                fitSelectedRoutes: false,
+                show: false,
+                createMarker: function(i, waypoint, n) {
+                    return null;
+                },
+                lineOptions: {
+                    styles: [
+                        {
+                            color: truck.color,
+                            opacity: 0.7,
+                            weight: truck.type === 'local' ? 4 : 6
+                        }
+                    ],
+                    extendToWaypoints: false,
+                    missingRouteTolerance: 0
+                },
+                router: L.Routing.osrmv1({
+                    serviceUrl: 'https://router.project-osrm.org/route/v1',
+                    profile: 'driving'
+                })
+            }).addTo(map);
 
-        const coordinates = route.coordinates;
-        const totalPoints = coordinates.length;
-        
-        // Move the truck along the route
-        route.progress += 0.002; // Adjust speed here
-        
-        if (route.progress >= 1) {
-            route.currentIndex = Math.min(route.currentIndex + 1, totalPoints - 2);
-            route.progress = 0;
+            routingControls[index] = routingControl;
+
+            // Store route information when it's found
+            routingControl.on('routesfound', function(e) {
+                const routes = e.routes;
+                if (routes && routes.length > 0) {
+                    const route = routes[0];
+                    
+                    activeRoutes[index] = {
+                        coordinates: route.coordinates,
+                        totalDistance: route.summary.totalDistance,
+                        totalTime: route.summary.totalTime,
+                        currentIndex: 0,
+                        progress: 0
+                    };
+
+                    updateTruckRouteInfo(truck, route.summary);
+                }
+            });
+
+            // Add destination marker
+            L.marker(truck.end, {
+                icon: destinationIcon
+            }).addTo(map).bindPopup(`Final Destination: ${truck.route.split('→')[1].trim()}`);
+
+            return routingControl;
+        }
+
+        // Function to update truck info with real route data
+        function updateTruckRouteInfo(truck, summary) {
+            const distanceKm = (summary.totalDistance / 1000).toFixed(1);
+            const timeMinutes = Math.round(summary.totalTime / 60);
+            console.log(`${truck.name}: ${distanceKm} km, ${timeMinutes} minutes`);
+        }
+
+        // Function to animate truck along the real route
+        function animateTruckAlongRoute(truck, index) {
+            const route = activeRoutes[index];
+            if (!route || !route.coordinates) return;
+
+            const coordinates = route.coordinates;
+            const totalPoints = coordinates.length;
             
-            // Reset if reached the end
-            if (route.currentIndex >= totalPoints - 2) {
-                route.currentIndex = 0;
+            route.progress += 0.002;
+            
+            if (route.progress >= 1) {
+                route.currentIndex = Math.min(route.currentIndex + 1, totalPoints - 2);
                 route.progress = 0;
                 
-                // In a real app, you might want to handle completion differently
-                console.log(`${truck.name} reached destination`);
+                if (route.currentIndex >= totalPoints - 2) {
+                    route.currentIndex = 0;
+                    route.progress = 0;
+                }
             }
+
+            const currentIndex = Math.floor(route.currentIndex);
+            const nextIndex = Math.min(currentIndex + 1, totalPoints - 1);
+            
+            const startCoord = coordinates[currentIndex];
+            const endCoord = coordinates[nextIndex];
+            
+            const lat = startCoord.lat + (endCoord.lat - startCoord.lat) * route.progress;
+            const lng = startCoord.lng + (endCoord.lng - startCoord.lng) * route.progress;
+            
+            if (truckMarkers[index]) {
+                truckMarkers[index].setLatLng([lat, lng]);
+                truck.currentPosition = L.latLng(lat, lng);
+            }
+
+            updateTruckProgress(truck, index);
         }
 
-        // Calculate current position using interpolation
-        const currentIndex = Math.floor(route.currentIndex);
-        const nextIndex = Math.min(currentIndex + 1, totalPoints - 1);
-        
-        const startCoord = coordinates[currentIndex];
-        const endCoord = coordinates[nextIndex];
-        
-        const lat = startCoord.lat + (endCoord.lat - startCoord.lat) * route.progress;
-        const lng = startCoord.lng + (endCoord.lng - startCoord.lng) * route.progress;
-        
-        // Update truck position
-        if (truckMarkers[index]) {
-            truckMarkers[index].setLatLng([lat, lng]);
-            truck.currentPosition = L.latLng(lat, lng);
-        }
+        // Function to update progress bar and ETA
+        function updateTruckProgress(truck, index) {
+            const route = activeRoutes[index];
+            if (!route) return;
 
-        // Update progress in UI (optional)
-        updateTruckProgress(truck, index);
-    }
-
-    // Function to update progress bar and ETA
-    function updateTruckProgress(truck, index) {
-        const route = activeRoutes[index];
-        if (!route) return;
-
-        const progress = (route.currentIndex + route.progress) / route.coordinates.length;
-        const progressPercent = Math.min(Math.floor(progress * 100), 100);
-        
-        // Update progress bar if this is the active truck
-        const activeTruckName = document.querySelector('.truck-name').textContent;
-        if (activeTruckName === truck.name.toUpperCase()) {
-            document.querySelector('.progress-fill').style.width = `${progressPercent}%`;
-            document.querySelector('.progress-label span:last-child').textContent = `${progressPercent}%`;
-            
-            // Update ETA based on progress
-            const remainingTime = Math.round(route.totalTime * (1 - progress) / 60);
-            document.querySelector('.info-item:nth-child(4) .info-value').textContent = 
-                `~${remainingTime} min away`;
-        }
-    }
-
-    // Initialize all routes and trucks
-    function initializeRoutes() {
-        // Add city markers
-        Object.entries(zimbabweCities).forEach(([city, coords]) => {
-            L.marker(coords)
-                .bindPopup(`<b>${city.charAt(0).toUpperCase() + city.slice(1)}</b><br>Major agricultural hub`)
-                .addTo(map);
-        });
-
-        // Add farm and market markers
-        L.marker(localLocations.kamangaFarm, { icon: farmIcon })
-            .bindPopup('<b>Kamanga Farm</b><br>Vegetable farm in Philadelphia')
-            .addTo(map);
-            
-        L.marker(localLocations.mazoweFarm, { icon: farmIcon })
-            .bindPopup('<b>Mazowe Farm</b><br>Dairy and crop farm')
-            .addTo(map);
-            
-        L.marker(localLocations.mbareMusika, { icon: marketIcon })
-            .bindPopup('<b>Mbare Musika</b><br>Largest market in Harare')
-            .addTo(map);
-            
-        L.marker(localLocations.chitungwizaMarket, { icon: marketIcon })
-            .bindPopup('<b>Chitungwiza Market</b><br>Local produce market')
-            .addTo(map);
-
-        // Create routes and truck markers for all trucks
-        [...interCityTrucks, ...localTrucks].forEach((truck, index) => {
-            // Create real route
-            createRealRoute(truck, index);
-            
-            // Create truck marker
-            const truckIcon = createTruckIcon(truck.color);
-            const marker = L.marker(truck.start, { 
-                icon: truckIcon,
-                zIndexOffset: 1000
-            }).addTo(map);
-            
-            // Add click event
-            marker.on('click', () => {
-                showTruckInfo(truck);
-                highlightTruck(truck.id);
-            });
-            
-            truckMarkers[index] = marker;
-        });
-
-        // Start animation loop
-        function animateAllTrucks() {
-            [...interCityTrucks, ...localTrucks].forEach((truck, index) => {
-                animateTruckAlongRoute(truck, index);
-            });
-            requestAnimationFrame(animateAllTrucks);
-        }
-        
-        animateAllTrucks();
-    }
-
-    // Function to show truck information
-    function showTruckInfo(truck) {
-        document.querySelector('.truck-info').classList.add('active');
-        document.querySelector('.truck-name').textContent = truck.name.toUpperCase();
-        
-        document.querySelector('.truck-status').textContent = 
-            truck.status === 'active' ? 'ON SCHEDULE' : 'IN PROGRESS';
-        
-        document.querySelector('.truck-status').className = 'truck-status ' + 
-            (truck.status === 'active' ? 'status-active' : 'status-local');
-
-        // Update info grid
-        document.querySelector('.info-item:nth-child(1) .info-value').textContent = truck.cargo;
-        document.querySelector('.info-item:nth-child(2) .info-value').textContent = truck.weight;
-        document.querySelector('.info-item:nth-child(3) .info-value').textContent = truck.route;
-        document.querySelector('.info-item:nth-child(5) .info-value').textContent = truck.driver;
-
-        // Update ETA with real data if available
-        const truckIndex = [...interCityTrucks, ...localTrucks].findIndex(t => t.id === truck.id);
-        if (truckIndex !== -1 && activeRoutes[truckIndex]) {
-            const route = activeRoutes[truckIndex];
             const progress = (route.currentIndex + route.progress) / route.coordinates.length;
-            const remainingTime = Math.round(route.totalTime * (1 - progress) / 60);
-            document.querySelector('.info-item:nth-child(4) .info-value').textContent = 
-                `~${remainingTime} min away`;
-        } else {
-            document.querySelector('.info-item:nth-child(4) .info-value').textContent = 'Calculating...';
+            const progressPercent = Math.min(Math.floor(progress * 100), 100);
+            
+            const activeTruckName = document.querySelector('.truck-name').textContent;
+            if (activeTruckName === truck.name.toUpperCase()) {
+                document.querySelector('.progress-fill').style.width = `${progressPercent}%`;
+                document.querySelector('.progress-label span:last-child').textContent = `${progressPercent}%`;
+                
+                const remainingTime = Math.round(route.totalTime * (1 - progress) / 60);
+                document.querySelector('.info-item:nth-child(4) .info-value').textContent = 
+                    `~${remainingTime} min away`;
+            }
         }
 
-        // Update truck list active item
+        // Initialize all routes and trucks
+        function initializeRoutes() {
+            // Add city markers
+            Object.entries(zimbabweCities).forEach(([city, coords]) => {
+                L.marker(coords)
+                    .bindPopup(`<b>${city.charAt(0).toUpperCase() + city.slice(1)}</b><br>Major agricultural hub`)
+                    .addTo(map);
+            });
+
+            // Add farm and market markers
+            L.marker(localLocations.kamangaFarm, { icon: farmIcon })
+                .bindPopup('<b>Kamanga Farm</b><br>Vegetable farm in Philadelphia')
+                .addTo(map);
+                
+            L.marker(localLocations.mazoweFarm, { icon: farmIcon })
+                .bindPopup('<b>Mazowe Farm</b><br>Dairy and crop farm')
+                .addTo(map);
+                
+            L.marker(localLocations.mbareMusika, { icon: marketIcon })
+                .bindPopup('<b>Mbare Musika</b><br>Largest market in Harare')
+                .addTo(map);
+                
+            L.marker(localLocations.chitungwizaMarket, { icon: marketIcon })
+                .bindPopup('<b>Chitungwiza Market</b><br>Local produce market')
+                .addTo(map);
+
+            // Create routes and truck markers for all trucks
+            [...interCityTrucks, ...localTrucks].forEach((truck, index) => {
+                createRealRoute(truck, index);
+                
+                const truckIcon = createTruckIcon(truck.color);
+                const marker = L.marker(truck.start, { 
+                    icon: truckIcon,
+                    zIndexOffset: 1000
+                }).addTo(map);
+                
+                marker.on('click', () => {
+                    showTruckInfo(truck);
+                    highlightTruck(truck.id);
+                });
+                
+                truckMarkers[index] = marker;
+            });
+
+            // Start animation loop
+            function animateAllTrucks() {
+                [...interCityTrucks, ...localTrucks].forEach((truck, index) => {
+                    animateTruckAlongRoute(truck, index);
+                });
+                requestAnimationFrame(animateAllTrucks);
+            }
+            
+            animateAllTrucks();
+        }
+
+        // Function to show truck information
+        function showTruckInfo(truck) {
+            document.querySelector('.truck-info').classList.add('active');
+            document.querySelector('.truck-name').textContent = truck.name.toUpperCase();
+            
+            document.querySelector('.truck-status').textContent = 
+                truck.status === 'active' ? 'ON SCHEDULE' : 'IN PROGRESS';
+            
+            document.querySelector('.truck-status').className = 'truck-status ' + 
+                (truck.status === 'active' ? 'status-active' : 'status-local');
+
+            // Update info grid
+            document.querySelector('.info-item:nth-child(1) .info-value').textContent = truck.cargo;
+            document.querySelector('.info-item:nth-child(2) .info-value').textContent = truck.weight;
+            document.querySelector('.info-item:nth-child(3) .info-value').textContent = truck.route;
+            document.querySelector('.info-item:nth-child(5) .info-value').textContent = truck.driver;
+
+            // Update ETA with real data if available
+            const truckIndex = [...interCityTrucks, ...localTrucks].findIndex(t => t.id === truck.id);
+            if (truckIndex !== -1 && activeRoutes[truckIndex]) {
+                const route = activeRoutes[truckIndex];
+                const progress = (route.currentIndex + route.progress) / route.coordinates.length;
+                const remainingTime = Math.round(route.totalTime * (1 - progress) / 60);
+                document.querySelector('.info-item:nth-child(4) .info-value').textContent = 
+                    `~${remainingTime} min away`;
+            } else {
+                document.querySelector('.info-item:nth-child(4) .info-value').textContent = 'Calculating...';
+            }
+
+            // Update truck list active item
+            document.querySelectorAll('.truck-list-item').forEach(item => {
+                item.classList.remove('active');
+                const truckName = item.querySelector('.truck-list-name').textContent;
+                if (truckName === truck.name) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Function to highlight truck on the map
+        function highlightTruck(truckId) {
+            truckMarkers.forEach(marker => {
+                marker.getElement().classList.remove('pulse');
+            });
+            
+            const truckIndex = [...interCityTrucks, ...localTrucks].findIndex(t => t.id === truckId);
+            if (truckIndex !== -1) {
+                truckMarkers[truckIndex].getElement().classList.add('pulse');
+                
+                const truck = [...interCityTrucks, ...localTrucks][truckIndex];
+                map.setView(truck.currentPosition, truck.type === 'local' ? 12 : 9);
+            }
+        }
+
+        // Add click events to truck list items
         document.querySelectorAll('.truck-list-item').forEach(item => {
-            item.classList.remove('active');
-            const truckName = item.querySelector('.truck-list-name').textContent;
-            if (truckName === truck.name) {
-                item.classList.add('active');
-            }
+            item.addEventListener('click', function() {
+                const truckName = this.querySelector('.truck-list-name').textContent;
+                
+                let truck = interCityTrucks.find(t => t.name === truckName);
+                if (truck) {
+                    showTruckInfo(truck);
+                    highlightTruck(truck.id);
+                    return;
+                }
+                
+                truck = localTrucks.find(t => t.name === truckName);
+                if (truck) {
+                    showTruckInfo(truck);
+                    highlightTruck(truck.id);
+                }
+            });
         });
-    }
 
-    // Function to highlight truck on the map
-    function highlightTruck(truckId) {
-        truckMarkers.forEach(marker => {
-            marker.getElement().classList.remove('pulse');
+        // Map control buttons
+        document.querySelectorAll('.control-btn').forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                if (index === 0) {
+                    map.zoomIn();
+                } else if (index === 1) {
+                    map.zoomOut();
+                } else if (index === 2) {
+                    map.setView([-19.0154, 29.1549], 8);
+                } else if (index === 3) {
+                    alert('Map layers would be toggled here');
+                }
+            });
         });
-        
-        const truckIndex = [...interCityTrucks, ...localTrucks].findIndex(t => t.id === truckId);
-        if (truckIndex !== -1) {
-            truckMarkers[truckIndex].getElement().classList.add('pulse');
+
+        // Export button functionality
+        document.querySelectorAll('.export-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.querySelector('.fa-file-csv')) {
+                    alert('Exporting data as CSV...');
+                    // CSV export logic would go here
+                } else if (this.querySelector('.fa-file-pdf')) {
+                    alert('Generating PDF report...');
+                    // PDF export logic would go here
+                } else if (this.querySelector('.fa-volume-up')) {
+                    alert('Playing voice summary in local language...');
+                    // Voice summary logic would go here
+                }
+            });
+        });
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRoutes();
             
-            // Center map on the truck
-            const truck = [...interCityTrucks, ...localTrucks][truckIndex];
-            map.setView(truck.currentPosition, truck.type === 'local' ? 12 : 9);
-        }
-    }
-
-    // Add click events to truck list items
-    document.querySelectorAll('.truck-list-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const truckName = this.querySelector('.truck-list-name').textContent;
-            
-            let truck = interCityTrucks.find(t => t.name === truckName);
-            if (truck) {
-                showTruckInfo(truck);
-                highlightTruck(truck.id);
-                return;
-            }
-            
-            truck = localTrucks.find(t => t.name === truckName);
-            if (truck) {
-                showTruckInfo(truck);
-                highlightTruck(truck.id);
-            }
+            // Show first truck info by default
+            setTimeout(() => {
+                showTruckInfo(interCityTrucks[0]);
+                highlightTruck(interCityTrucks[0].id);
+            }, 1000);
         });
-    });
 
-    // Map control buttons
-    document.querySelectorAll('.control-btn').forEach((btn, index) => {
-        btn.addEventListener('click', function() {
-            if (index === 0) {
-                map.zoomIn();
-            } else if (index === 1) {
-                map.zoomOut();
-            } else if (index === 2) {
-                map.setView([-19.0154, 29.1549], 8);
-            } else if (index === 3) {
-                alert('Map layers would be toggled here');
-            }
-        });
-    });
-
-    // Initialize everything when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeRoutes();
-        
-        // Show first truck info by default
-        setTimeout(() => {
-            showTruckInfo(interCityTrucks[0]);
-            highlightTruck(interCityTrucks[0].id);
-        }, 1000);
-    });
-
-    // Error handling for routing failures
-    window.addEventListener('error', function(e) {
-        console.log('Routing error, using fallback routes:', e);
-        // You could implement fallback to straight lines here if OSRM fails
-    });
-
-</script>
+    </script>
 
 </body>
 </html>
