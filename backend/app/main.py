@@ -6,7 +6,7 @@ from app.database import engine, Base
 from app.models.schemas import HealthCheck
 import os
 from pathlib import Path
-
+from app.mcp_server.ussd_router import router as ussd_router
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
@@ -35,6 +35,8 @@ PUBLIC_DIR.mkdir(exist_ok=True)
 # Mount the static files directory
 app.mount("/static", StaticFiles(directory=str(PUBLIC_DIR)), name="static")
 
+
+app.include_router(ussd_router, prefix="/api", tags=["USSD"])
 # Serve the main HTML file for the root route
 @app.get("/", response_class=FileResponse)
 async def serve_frontend():
