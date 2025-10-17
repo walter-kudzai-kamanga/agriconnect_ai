@@ -15,7 +15,7 @@
         }
         
         :root {
-            --primary: #1a5e1a;
+            --primary: #3a3861;
             --secondary: #4CAF50;
             --accent: #FF9800;
             --dark: #0a2a0a;
@@ -167,15 +167,46 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
+            height: 18vh;
+        
         }
         
         .overview-card {
             background: rgba(20, 60, 20, 0.6);
             border-radius: 12px;
-            padding: 20px;
+            padding: 10px;
             border-left: 4px solid var(--secondary);
+            height: 100%;
         }
         
+        .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #90caf9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.0rem; 
+    font-weight: 500;
+    color: #fff;
+
+}
+
         .overview-card.warning {
             border-left-color: var(--warning);
         }
@@ -288,6 +319,20 @@
         }
         
         .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            grid-column: 2;
+            grid-row: 3;
+        }
+          .market-insights {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            grid-column: 2;
+            grid-row: 3;
+        }
+          .notification-panel {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -1017,7 +1062,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h2><i class="fas fa-truck-moving"></i> ACTIVE FLEET</h2>
+                    <h3><i class="fas fa-truck-moving"></i> ACTIVE FLEET</h3>
                     <div class="truck-list">
                         <div class="truck-list-item active">
                             <div class="truck-avatar" style="background: rgba(76, 175, 80, 0.2); color: var(--success);">
@@ -1044,7 +1089,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h2><i class="fas fa-truck-pickup"></i> AVAILABLE TRUCKS</h2>
+                    <h3><i class="fas fa-truck-pickup"></i> AVAILABLE TRUCKS</h3>
                     <div class="truck-list">
                         <div class="truck-list-item">
                             <div class="truck-avatar" style="background: rgba(33, 150, 243, 0.2); color: var(--available);">
