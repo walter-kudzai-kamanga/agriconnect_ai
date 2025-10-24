@@ -89,3 +89,5 @@ could start building:
 * Flutter app MVP - for farmer + transporter
 * Backend + MCP agent - for matching + route optimization
 * Demo dashboard for live visualization
+
+##new starting protocol  ./start_all.sh  
