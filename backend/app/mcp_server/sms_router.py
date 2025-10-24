@@ -1,6 +1,10 @@
+from fastapi import APIRouter, HTTPException, Request
+from pydantic import BaseModel
 from typing import Dict, List, Optional, Tuple
 import re
 from datetime import datetime
+
+router = APIRouter()
 
 # Add these models for SMS processing
 class SMSRequest(BaseModel):

@@ -1,0 +1,9 @@
+INFO:     Started server process [35532]
+INFO:     Waiting for application startup.
+2025-10-21 22:15:18,673 - mcp_brain - INFO - MCP Brain started - all services initialized
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51360 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51653 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52869 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53581 - "POST /token HTTP/1.1" 200 OK

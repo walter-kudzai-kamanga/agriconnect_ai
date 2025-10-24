@@ -13,7 +13,6 @@ import logging
 from dataclasses import dataclass
 import json
 
-# Try to use redis if available, fallback to in-memory cache
 try:
     import redis.asyncio as redis
     REDIS_AVAILABLE = True
@@ -29,8 +28,7 @@ class Config:
     PORT = int(os.getenv("PORT", "8002"))
     CLIENT_API_KEY = os.getenv("MCP_CLIENT_API_KEY")
     REDIS_URL = os.getenv("REDIS_URL")
-    
-    # Real API Keys (you'll need to register for these)
+   
     USDA_API_KEY = os.getenv("USDA_API_KEY", "")  # USDA Market News
     FAO_API_KEY = os.getenv("FAO_API_KEY", "")    # UN Food and Agriculture Org
     OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", "")  # For weather context
@@ -38,7 +36,7 @@ class Config:
     # API Endpoints
     USDA_BASE_URL = "https://api.marketnews.usda.gov/v1"
     FAO_STAT_BASE_URL = "http://fenixservices.fao.org/api/v1"
-    AGRIWATCH_BASE_URL = "https://api.agriwatch.com/v1"  # Example commercial API
+    AGRIWATCH_BASE_URL = "https://api.agriwatch.com/v1" 
     
     # Cache settings
     DEFAULT_CACHE_TTL = 3600  # 1 hour for market data

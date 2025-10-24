@@ -1,0 +1,29 @@
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:64: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  lat: float = Field(..., ge=-90, le=90, example=-17.825)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:65: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  lon: float = Field(..., ge=-180, le=180, example=31.030)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:66: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  address: Optional[str] = Field(None, example="Mbare Musika, Harare")
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:72: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  required_capacity_kg: float = Field(..., ge=1, le=50000, example=500.0)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:110: PydanticDeprecatedSince20: `max_items` is deprecated and will be removed, use `max_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  requests: List[TransportRequest] = Field(..., max_items=5)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:513: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/transport_server/main.py:518: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("shutdown")
+INFO:     Started server process [35521]
+INFO:     Waiting for application startup.
+INFO:transport_mcp:Transport MCP Server started with live data capabilities
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8003 (Press CTRL+C to quit)

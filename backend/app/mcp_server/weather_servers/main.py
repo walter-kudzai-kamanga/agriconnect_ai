@@ -145,12 +145,10 @@ class WeatherService:
         return f"weather:{round(lat, 4)}:{round(lon, 4)}:{units}"
     
     async def fetch_live_weather(self, lat: float, lon: float, units: str) -> Dict[str, Any]:
-        """Fetch live weather data from OpenWeatherMap"""
+        """Fetch live weather data from OpenWeatherMap or return simulated data"""
         if not config.OPENWEATHER_API_KEY:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="OpenWeatherMap API key not configured"
-            )
+            LOG.warning("No OpenWeatherMap API key - returning simulated weather data")
+            return self._generate_simulated_weather(lat, lon, units)
         
         params = {
             "lat": lat,
@@ -220,6 +218,66 @@ class WeatherService:
             detail="Failed to fetch weather data after multiple attempts"
         )
     
+    def _generate_simulated_weather(self, lat: float, lon: float, units: str) -> Dict[str, Any]:
+        """Generate simulated weather data for testing when no API key is available"""
+        import random
+        
+        # Base temperature varies by latitude (tropical vs temperate)
+        base_temp = 25 if abs(lat) < 23.5 else 15  # Celsius
+        
+        # Add some randomness
+        temp_variation = random.uniform(-5, 10)
+        temp_c = base_temp + temp_variation
+        
+        # Convert to requested units
+        if units == "imperial":
+            temp = (temp_c * 9/5) + 32
+            feels_like = temp + random.uniform(-3, 3)
+        elif units == "standard":
+            temp = temp_c + 273.15
+            feels_like = temp + random.uniform(-2, 2)
+        else:  # metric
+            temp = temp_c
+            feels_like = temp + random.uniform(-2, 2)
+        
+        # Generate realistic weather conditions
+        conditions = [
+            {"id": 800, "main": "Clear", "description": "clear sky", "icon": "01d"},
+            {"id": 801, "main": "Clouds", "description": "few clouds", "icon": "02d"},
+            {"id": 802, "main": "Clouds", "description": "scattered clouds", "icon": "03d"},
+            {"id": 500, "main": "Rain", "description": "light rain", "icon": "10d"},
+        ]
+        
+        condition = random.choice(conditions)
+        
+        return {
+            "coord": {"lon": lon, "lat": lat},
+            "weather": [condition],
+            "main": {
+                "temp": round(temp, 2),
+                "feels_like": round(feels_like, 2),
+                "temp_min": round(temp - 3, 2),
+                "temp_max": round(temp + 3, 2),
+                "pressure": random.randint(1005, 1020),
+                "humidity": random.randint(40, 80)
+            },
+            "visibility": random.randint(8000, 10000),
+            "wind": {
+                "speed": round(random.uniform(2, 8), 2),
+                "deg": random.randint(0, 360)
+            },
+            "clouds": {"all": condition["id"] // 10 % 10 * 20},
+            "dt": int(time.time()),
+            "sys": {
+                "sunrise": int(time.time() - 3600),
+                "sunset": int(time.time() + 7200)
+            },
+            "timezone": 0,
+            "id": 0,
+            "name": "Simulated Location",
+            "cod": 200
+        }
+    
     async def get_weather(self, request: WeatherRequest) -> WeatherResponse:
         """Get weather data with caching support"""
         lat, lon = request.location.lat, request.location.lon
@@ -235,10 +293,11 @@ class WeatherService:
         
         # Fetch live data
         LOG.info("Fetching live weather data for %s,%s", lat, lon)
+        is_simulated = not config.OPENWEATHER_API_KEY
         raw_data = await self.fetch_live_weather(lat, lon, request.units)
         
         # Parse response
-        weather_response = self._parse_weather_response(raw_data, request.location, request.units)
+        weather_response = self._parse_weather_response(raw_data, request.location, request.units, is_simulated)
         
         # Cache the response
         await self._cache_weather(cache_key, weather_response, cache_ttl)
@@ -276,7 +335,7 @@ class WeatherService:
         except Exception as e:
             LOG.warning("Failed to cache weather data: %s", e)
     
-    def _parse_weather_response(self, raw_data: Dict, location: Location, units: str) -> WeatherResponse:
+    def _parse_weather_response(self, raw_data: Dict, location: Location, units: str, is_simulated: bool = False) -> WeatherResponse:
         """Parse OpenWeatherMap response into standardized format"""
         main = raw_data.get('main', {})
         weather = raw_data.get('weather', [{}])[0]
@@ -304,18 +363,20 @@ class WeatherService:
         )
         
         return WeatherResponse(
+            source="simulated" if is_simulated else "openweathermap",
             timestamp=datetime.now(timezone.utc).isoformat(),
             location=location,
             data=weather_data,
             units=units,
             meta={
                 "cache_ttl": config.DEFAULT_CACHE_TTL,
-                "confidence": 0.95,
+                "confidence": 0.7 if is_simulated else 0.95,
                 "units_label": unit_labels.get(units, {}),
                 "city_id": raw_data.get('id'),
                 "timezone": raw_data.get('timezone'),
                 "sunrise": raw_data.get('sys', {}).get('sunrise'),
-                "sunset": raw_data.get('sys', {}).get('sunset')
+                "sunset": raw_data.get('sys', {}).get('sunset'),
+                "simulated": is_simulated
             }
         )
     

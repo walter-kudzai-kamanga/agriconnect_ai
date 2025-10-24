@@ -1,0 +1,17 @@
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:48: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  lat: float = Field(..., ge=-90, le=90, example=40.7128)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:49: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  lon: float = Field(..., ge=-180, le=180, example=-74.0060)
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:50: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  name: Optional[str] = Field(None, example="Marondera")
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:51: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  country: Optional[str] = Field(None, example="Zimbabwe")
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:81: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  @validator('timestamp')
+/Users/user/Downloads/agriconnect-ai/backend/app/mcp_server/weather_servers/main.py:90: PydanticDeprecatedSince20: `max_items` is deprecated and will be removed, use `max_length` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+  locations: List[Location] = Field(..., max_items=10)
+INFO:     Started server process [35515]
+INFO:     Waiting for application startup.
+2025-10-21 22:15:08,135 - weather_mcp - INFO - Weather MCP Server started successfully
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)

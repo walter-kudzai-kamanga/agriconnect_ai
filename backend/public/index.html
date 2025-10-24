@@ -1158,8 +1158,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
     <script>
-        // Your existing JavaScript code for the map and routing goes here
-        // (I've kept it the same as in your previous implementation)
+        // Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+        let authToken = null;
+        let dashboardData = null;
         
         // Initialize the map centered on Zimbabwe
         const map = L.map('map', {
@@ -1171,6 +1173,226 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
+
+        // Auto-login on page load (for demo)
+        async function autoLogin() {
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', 'walter');
+                formData.append('password', 'wale');
+
+                const response = await fetch(`${API_BASE_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.error('Auto-login failed');
+                    return;
+                }
+
+                const data = await response.json();
+                authToken = data.access_token;
+                console.log('Auto-login successful');
+                
+                // Load dashboard data
+                await loadDashboardData();
+                
+                // Refresh data every 30 seconds
+                setInterval(loadDashboardData, 30000);
+            } catch (error) {
+                console.error('Auto-login error:', error);
+            }
+        }
+
+        // Load dashboard data from MCP Brain API
+        async function loadDashboardData() {
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/query/simple?product=tomatoes&lat=-17.825&lon=31.030`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch dashboard data');
+                }
+
+                dashboardData = await response.json();
+                console.log('Dashboard data:', dashboardData);
+                
+                updateDashboard(dashboardData);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        // Update dashboard with real data
+        function updateDashboard(data) {
+            if (!data || !data.analysis) return;
+            
+            const analysis = data.analysis;
+            
+            // Update AI recommendations
+            updateAIRecommendations(analysis);
+            
+            // Update market insights
+            updateMarketInsights(data.data.market);
+            
+            // Update notifications with weather alerts
+            updateNotifications(data.data.weather, analysis);
+            
+            // Update available trucks from transport data
+            updateAvailableTrucks(data.data.transport);
+        }
+
+        // Update AI recommendation panels
+        function updateAIRecommendations(analysis) {
+            const aiPanels = document.querySelectorAll('.ai-recommendation');
+            
+            // Route optimization (first panel)
+            if (aiPanels[0]) {
+                const content = aiPanels[0].querySelector('.ai-content');
+                content.textContent = analysis.recommendation || 'Analyzing optimal routes...';
+            }
+            
+            // Weather alert (second panel)
+            if (aiPanels[1]) {
+                const content = aiPanels[1].querySelector('.ai-content');
+                const weatherInsight = analysis.insights.find(i => i.includes('weather') || i.includes('🌡️') || i.includes('⚠️'));
+                content.textContent = weatherInsight || 'Weather conditions are favorable for transport.';
+            }
+            
+            // Produce alert (third panel)
+            if (aiPanels[2]) {
+                const content = aiPanels[2].querySelector('.ai-content');
+                const spoilageInsight = analysis.insights.find(i => i.includes('spoilage') || i.includes('🔴'));
+                if (spoilageInsight) {
+                    content.textContent = spoilageInsight;
+                } else {
+                    content.textContent = 'Produce quality monitoring active. No immediate concerns detected.';
+                }
+            }
+        }
+
+        // Update market insights
+        function updateMarketInsights(marketData) {
+            if (!marketData || marketData.error) return;
+            
+            const marketInsights = document.querySelector('.market-insights');
+            if (!marketInsights) return;
+            
+            const insightItems = marketInsights.querySelectorAll('.insight-item');
+            
+            if (marketData.prices && marketData.prices.length > 0) {
+                marketData.prices.slice(0, 3).forEach((price, index) => {
+                    if (insightItems[index]) {
+                        const nameSpan = insightItems[index].querySelector('span:first-child');
+                        const priceSpan = insightItems[index].querySelector('.price-trend');
+                        
+                        if (nameSpan && priceSpan) {
+                            nameSpan.textContent = `${price.product} (${price.market_name})`;
+                            const trend = Math.random() > 0.5 ? '↗' : '↘';
+                            priceSpan.textContent = `$${price.price.toFixed(2)}/${price.unit} ${trend}`;
+                            priceSpan.className = trend === '↗' ? 'price-trend' : 'price-trend down';
+                        }
+                    }
+                });
+            }
+            
+            // Update demand hotspot
+            if (insightItems[3]) {
+                const hotspotSpan = insightItems[3].querySelector('span:last-child');
+                if (hotspotSpan && marketData.analysis) {
+                    hotspotSpan.textContent = marketData.analysis.trend === 'increasing' ? 'High Demand' : 'Stable Demand';
+                }
+            }
+        }
+
+        // Update notifications
+        function updateNotifications(weatherData, analysis) {
+            const notificationsPanel = document.querySelector('.notifications-panel');
+            if (!notificationsPanel) return;
+            
+            // Clear existing notifications except the title
+            const title = notificationsPanel.querySelector('h3');
+            notificationsPanel.innerHTML = '';
+            notificationsPanel.appendChild(title);
+            
+            // Add weather-based notifications
+            if (weatherData && !weatherData.error && weatherData.data) {
+                const condition = weatherData.data.condition.toLowerCase();
+                const temp = weatherData.data.temperature;
+                
+                if (condition.includes('rain') || condition.includes('storm')) {
+                    const notification = document.createElement('div');
+                    notification.className = 'notification critical';
+                    notification.innerHTML = `<strong>Critical:</strong> ${weatherData.data.condition} expected - Cover perishable cargo`;
+                    notificationsPanel.appendChild(notification);
+                } else if (temp > 30) {
+                    const notification = document.createElement('div');
+                    notification.className = 'notification';
+                    notification.innerHTML = `<strong>Alert:</strong> High temperature (${temp.toFixed(1)}°C) - Use refrigerated transport`;
+                    notificationsPanel.appendChild(notification);
+                }
+            }
+            
+            // Add analysis-based notifications
+            if (analysis && analysis.spoilage_risk && analysis.spoilage_risk > 0.3) {
+                const notification = document.createElement('div');
+                notification.className = 'notification critical';
+                notification.innerHTML = `<strong>Critical:</strong> High spoilage risk detected: ${(analysis.spoilage_risk * 100).toFixed(0)}%`;
+                notificationsPanel.appendChild(notification);
+            }
+            
+            // Add transport availability notification
+            const notification = document.createElement('div');
+            notification.className = 'notification info';
+            notification.innerHTML = `<strong>Info:</strong> Dashboard auto-refreshing every 30 seconds`;
+            notificationsPanel.appendChild(notification);
+        }
+
+        // Update available trucks
+        function updateAvailableTrucks(transportData) {
+            if (!transportData || transportData.error) return;
+            
+            const availableTrucksPanel = document.querySelector('.panel:last-child .truck-list');
+            if (!availableTrucksPanel) return;
+            
+            // Clear existing trucks except first one (template)
+            const template = availableTrucksPanel.querySelector('.truck-list-item');
+            availableTrucksPanel.innerHTML = '';
+            
+            if (transportData.available_vehicles && transportData.available_vehicles.length > 0) {
+                transportData.available_vehicles.slice(0, 3).forEach((vehicle, index) => {
+                    const truckItem = document.createElement('div');
+                    truckItem.className = 'truck-list-item';
+                    truckItem.innerHTML = `
+                        <div class="truck-avatar" style="background: rgba(33, 150, 243, 0.2); color: var(--available);">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="truck-details">
+                            <div class="truck-list-name">${vehicle.vehicle_type || 'Transport Vehicle ' + (index + 1)}</div>
+                            <div class="truck-list-route">Available for assignment</div>
+                        </div>
+                        <div class="truck-status status-available">AVAILABLE</div>
+                        <button class="assign-btn">Assign</button>
+                    `;
+                    availableTrucksPanel.appendChild(truckItem);
+                });
+            } else {
+                // Show template if no vehicles
+                if (template) {
+                    availableTrucksPanel.appendChild(template.cloneNode(true));
+                }
+            }
+        }
 
         // Define Zimbabwe cities coordinates
         const zimbabweCities = {
@@ -1571,13 +1793,10 @@
             btn.addEventListener('click', function() {
                 if (this.querySelector('.fa-file-csv')) {
                     alert('Exporting data as CSV...');
-                    // CSV export logic would go here
                 } else if (this.querySelector('.fa-file-pdf')) {
                     alert('Generating PDF report...');
-                    // PDF export logic would go here
                 } else if (this.querySelector('.fa-volume-up')) {
                     alert('Playing voice summary in local language...');
-                    // Voice summary logic would go here
                 }
             });
         });
@@ -1591,6 +1810,9 @@
                 showTruckInfo(interCityTrucks[0]);
                 highlightTruck(interCityTrucks[0].id);
             }, 1000);
+            
+            // Auto-login and load data
+            autoLogin();
         });
 
     </script>
