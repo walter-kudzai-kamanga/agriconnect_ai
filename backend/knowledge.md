@@ -163,3 +163,9 @@ If you see "circuit breaker open" errors:
 5. Responses cached in Redis
 6. Intelligent analysis performed
 7. Unified response returned to user
+
+
+## testing mcp with claude
+1. navigate to app/mcp_server directory
+2. run npx @modelcontextprotocol/inspector ./debug_mcp.sh
+3. connects then test with claude

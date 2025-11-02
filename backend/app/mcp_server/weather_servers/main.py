@@ -240,7 +240,7 @@ class WeatherService:
             temp = temp_c
             feels_like = temp + random.uniform(-2, 2)
         
-        # Generate realistic weather conditions
+      
         conditions = [
             {"id": 800, "main": "Clear", "description": "clear sky", "icon": "01d"},
             {"id": 801, "main": "Clouds", "description": "few clouds", "icon": "02d"},

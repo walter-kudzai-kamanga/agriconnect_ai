@@ -18,8 +18,8 @@ Consequences:
 1. Connect smallholder farmers to available transporters in real-time.
 2. Optimize delivery routes to reduce spoilage and cost.
 3. Provide market insights best prices, nearby demand, predicted arrival times.
-4. Support voice and text interaction in local languages.
-5. Demonstrate multi-context AI reasoning via MCP: transport, weather, and market data fused intelligently.
+
+4. Demonstrate multi-context AI reasoning via MCP: transport, weather, and market data fused intelligently.
 
 
 
@@ -86,7 +86,7 @@ if time permits am to add
 
 could start building:
 
-* Flutter app MVP - for farmer + transporter
+
 * Backend + MCP agent - for matching + route optimization
 * Demo dashboard for live visualization
 

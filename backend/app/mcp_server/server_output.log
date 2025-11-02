@@ -1,0 +1,4 @@
+2025-10-25 10:38:46,014 - mcp_brain - INFO - === AgriConnect MCP Brain Server Starting ===
+2025-10-25 10:38:46,014 - mcp_brain - INFO - Weather Service: http://localhost:8001
+2025-10-25 10:38:46,014 - mcp_brain - INFO - Market Service: http://localhost:8002
+2025-10-25 10:38:46,014 - mcp_brain - INFO - Transport Service: http://localhost:8003

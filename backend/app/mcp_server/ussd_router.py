@@ -25,7 +25,7 @@ class RouteOptimization(BaseModel):
     spoilage_risk: float
     recommendations: List[str]
 
-# USSD session storage with TTL (in production, use Redis)
+# USSD session storage with TTL 
 ussd_sessions = {}
 SESSION_TTL = 300  # 5 minutes
 
