@@ -9,7 +9,7 @@ from mcp.server import NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 import mcp.types as types
 
-# Your API base URL
+
 API_BASE_URL = "http://localhost:8000"
 
 # Initialize MCP server
