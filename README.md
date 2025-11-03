@@ -18,8 +18,8 @@ Consequences:
 1. Connect smallholder farmers to available transporters in real-time.
 2. Optimize delivery routes to reduce spoilage and cost.
 3. Provide market insights best prices, nearby demand, predicted arrival times.
-4. Support voice and text interaction in local languages.
-5. Demonstrate multi-context AI reasoning via MCP: transport, weather, and market data fused intelligently.
+
+4. Demonstrate multi-context AI reasoning via MCP: transport, weather, and market data fused intelligently.
 
 
 
@@ -57,8 +57,8 @@ MCP AI Architecture
 
 4. Output Layer
 
-   * Farmer app (mobile / SMS / voice)
-   * Transporter app (mobile / dashboard)
+   * Farmer  (SMS )
+  
    * Admin dashboard (for NGOs or cooperatives)
 
 
@@ -69,7 +69,7 @@ Storyboard
 2. Step 2 - MCP agent retrieves nearby available transporters, road conditions, weather forecasts, and market demand.
 3. Step 3 - AI recommends optimal transport match and delivery route; sends notification to farmer and transporter.
 4. Step 4 -  Dashboard shows live status: “Truck #3 is picking up 500kg tomatoes, expected arrival in 2h at Mbare Musika.”
-5. Step 5 -  Farmer receives confirmation + market price estimate. Optionally, transporter can update progress via app/SMS.
+5. Step 5 -  Farmer receives confirmation + market price estimate. Optionally, transporter can update progress via SMS.
 
 Visual Demo - Map with moving vehicle icons, farmer input screen, alerts in local language.
 
@@ -86,7 +86,7 @@ if time permits am to add
 
 could start building:
 
-* Flutter app MVP - for farmer + transporter
+
 * Backend + MCP agent - for matching + route optimization
 * Demo dashboard for live visualization
 
