@@ -91,3 +91,12 @@ could start building:
 * Demo dashboard for live visualization
 
 ##new starting protocol  ./start_all.sh  
+
+video demonstrations 
+first part
+https://go.screenpal.com/watch/cTX1DGnFycf
+second part
+https://go.screenpal.com/watch/cTX1DpnFxWb
+
+last part
+[https://somup.com/cTX1DA9AkS](https://go.screenpal.com/watch/cTX1DBnFxSU)
