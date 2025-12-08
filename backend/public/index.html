@@ -827,6 +827,193 @@
             background: var(--accent);
             border: none;
         }
+        
+        /* New feature styles */
+        .badge {
+            background: var(--danger);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+        
+        .tracking-panel {
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tracking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .tracking-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .tracking-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            transition: width 0.3s;
+        }
+        
+        .price-forecast-panel {
+            background: rgba(20, 60, 20, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .forecast-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 150px;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .forecast-bar {
+            flex: 1;
+            margin: 0 2px;
+            background: linear-gradient(to top, var(--secondary), var(--accent));
+            border-radius: 4px 4px 0 0;
+            min-height: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .forecast-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.1);
+        }
+        
+        .forecast-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        
+        .spoilage-risk-gauge {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin: 20px auto;
+        }
+        
+        .gauge-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gauge-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid;
+            border-top-color: var(--success);
+            border-right-color: var(--warning);
+            border-bottom-color: var(--danger);
+            border-left-color: transparent;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+        
+        .gauge-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 10;
+        }
+        
+        .offline-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .offline-stat {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .offline-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .offline-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: rgba(10, 42, 10, 0.95);
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -846,6 +1033,15 @@
                 <div class="stats-bar">
                   
                     <div class="user-controls">
+                        <select id="language-selector" class="btn" style="padding: 10px 15px;">
+                            <option value="en">🇬🇧 English</option>
+                            <option value="sn">🇿🇼 Shona</option>
+                            <option value="nd">🇿🇼 Ndebele</option>
+                        </select>
+                        <button class="btn" onclick="showOfflineStats()">
+                            <i class="fas fa-wifi"></i>
+                            <span id="offline-badge" class="badge">0</span>
+                        </button>
                         <button class="btn">
                             <i class="fas fa-bell"></i>
                             Alerts
@@ -1047,17 +1243,84 @@
                     </div>
                 </div>
                 
+                <!-- GPS Tracking Panel -->
+                <div class="tracking-panel">
+                    <h3><i class="fas fa-map-marker-alt"></i> Active GPS Tracking</h3>
+                    <div id="tracking-list">
+                        <div class="tracking-item">
+                            <div>
+                                <div style="font-weight: 600;">Job #001</div>
+                                <div style="font-size: 0.8rem; opacity: 0.8;">Harare → Marondera</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.9rem; color: var(--secondary);">65%</div>
+                                <div style="font-size: 0.7rem; opacity: 0.7;">ETA: 45min</div>
+                            </div>
+                        </div>
+                        <div class="tracking-progress">
+                            <div class="tracking-progress-fill" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Price Forecast Panel -->
+                <div class="price-forecast-panel">
+                    <h3><i class="fas fa-chart-line"></i> Price Forecast (7 Days)</h3>
+                    <div style="margin-bottom: 10px;">
+                        <select id="forecast-product" style="background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 5px;">
+                            <option value="tomatoes">Tomatoes</option>
+                            <option value="maize">Maize</option>
+                            <option value="fresh vegetables">Vegetables</option>
+                        </select>
+                    </div>
+                    <div class="forecast-chart" id="forecast-chart">
+                        <!-- Forecast bars will be inserted here -->
+                    </div>
+                    <div id="forecast-recommendation" style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem;">
+                        Loading forecast...
+                    </div>
+                </div>
+                
+                <!-- Enhanced Spoilage Risk -->
+                <div class="tracking-panel">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Spoilage Risk Analysis</h3>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="spoilage-risk-gauge">
+                            <div class="gauge-circle">
+                                <div class="gauge-fill" id="gauge-fill" style="transform: rotate(0deg);"></div>
+                                <div class="gauge-value" id="gauge-value">8%</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="info-item" style="margin-bottom: 10px;">
+                                <div class="info-label">Risk Level</div>
+                                <div class="info-value" id="risk-level">Low</div>
+                            </div>
+                            <div class="info-item" style="margin-bottom: 10px;">
+                                <div class="info-label">High Risk Shipments</div>
+                                <div class="info-value" id="high-risk-count">3</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Recommendation</div>
+                                <div class="info-value" style="font-size: 0.9rem;" id="spoilage-recommendation">Monitor closely</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Notifications -->
                 <div class="notifications-panel">
                     <h3><i class="fas fa-bell"></i> Notifications</h3>
-                    <div class="notification critical">
-                        <strong>Critical:</strong> Heavy rain expected in Marondera - Cover perishable cargo
-                    </div>
-                    <div class="notification">
-                        <strong>Alert:</strong> Low-capacity farmer needs support in Mazowe Valley
-                    </div>
-                    <div class="notification info">
-                        <strong>Info:</strong> 3 trucks available for assignment
+                    <div id="notifications-list">
+                        <div class="notification critical">
+                            <strong>Critical:</strong> Heavy rain expected in Marondera - Cover perishable cargo
+                        </div>
+                        <div class="notification">
+                            <strong>Alert:</strong> Low-capacity farmer needs support in Mazowe Valley
+                        </div>
+                        <div class="notification info">
+                            <strong>Info:</strong> 3 trucks available for assignment
+                        </div>
                     </div>
                 </div>
                 
@@ -1152,6 +1415,31 @@
             </div>
         </div>
     </div>
+    
+    <!-- Offline Stats Modal -->
+    <div id="offline-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeOfflineModal()">&times;</span>
+            <h2><i class="fas fa-wifi"></i> Offline Requests Status</h2>
+            <div class="offline-stats" id="offline-stats">
+                <div class="offline-stat">
+                    <div class="offline-stat-value" id="offline-pending">0</div>
+                    <div class="offline-stat-label">Pending</div>
+                </div>
+                <div class="offline-stat">
+                    <div class="offline-stat-value" id="offline-synced">0</div>
+                    <div class="offline-stat-label">Synced</div>
+                </div>
+                <div class="offline-stat">
+                    <div class="offline-stat-value" id="offline-total">0</div>
+                    <div class="offline-stat-label">Total</div>
+                </div>
+            </div>
+            <div id="offline-requests-list" style="margin-top: 20px;">
+                <!-- Pending requests will be listed here -->
+            </div>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
@@ -1201,8 +1489,18 @@
                 // Load dashboard data
                 await loadDashboardData();
                 
+                // Load new features data
+                await loadTrackingData();
+                await loadPriceForecast();
+                await loadOfflineStats();
+                await loadSpoilageRisk();
+                
                 // Refresh data every 30 seconds
                 setInterval(loadDashboardData, 30000);
+                setInterval(loadTrackingData, 10000); // Update tracking more frequently
+                setInterval(loadPriceForecast, 60000); // Update forecast every minute
+                setInterval(loadOfflineStats, 30000);
+                setInterval(loadSpoilageRisk, 30000);
             } catch (error) {
                 console.error('Auto-login error:', error);
             }
@@ -1801,6 +2099,291 @@
             });
         });
 
+        // New feature functions
+        
+        async function loadTrackingData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/mcp/tracking/active`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateTrackingDisplay(data);
+                }
+            } catch (error) {
+                console.error('Error loading tracking data:', error);
+            }
+        }
+        
+        function updateTrackingDisplay(trackings) {
+            const trackingList = document.getElementById('tracking-list');
+            if (!trackingList) return;
+            
+            if (Object.keys(trackings).length === 0) {
+                trackingList.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 20px;">No active trackings</div>';
+                return;
+            }
+            
+            let html = '';
+            for (const [jobId, tracking] of Object.entries(trackings)) {
+                if (!tracking) continue;
+                const progress = tracking.progress || 0;
+                const eta = tracking.eta || 'Calculating...';
+                
+                html += `
+                    <div class="tracking-item">
+                        <div>
+                            <div style="font-weight: 600;">Job #${jobId.slice(-3)}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.8;">${tracking.current_location ? '📍 Live' : '⏳ Starting...'}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.9rem; color: var(--secondary);">${progress}%</div>
+                            <div style="font-size: 0.7rem; opacity: 0.7;">ETA: ${eta}</div>
+                        </div>
+                    </div>
+                    <div class="tracking-progress">
+                        <div class="tracking-progress-fill" style="width: ${progress}%;"></div>
+                    </div>
+                `;
+            }
+            trackingList.innerHTML = html;
+        }
+        
+        async function loadPriceForecast() {
+            try {
+                const product = document.getElementById('forecast-product')?.value || 'tomatoes';
+                const response = await fetch(`${API_BASE_URL}/api/v1/mcp/forecast/price`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product: product,
+                        market: 'Mbare Musika',
+                        days: 7
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateForecastDisplay(data);
+                }
+            } catch (error) {
+                console.error('Error loading price forecast:', error);
+            }
+        }
+        
+        function updateForecastDisplay(forecast) {
+            const chart = document.getElementById('forecast-chart');
+            const recommendation = document.getElementById('forecast-recommendation');
+            
+            if (!chart || !forecast.forecast) return;
+            
+            // Clear and build chart
+            chart.innerHTML = '';
+            const maxPrice = Math.max(...forecast.forecast.map(f => f.price));
+            
+            forecast.forecast.forEach((day, index) => {
+                const height = (day.price / maxPrice) * 100;
+                const date = new Date(day.date);
+                const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const dateLabel = date.getDate();
+                
+                const bar = document.createElement('div');
+                bar.className = 'forecast-bar';
+                bar.style.height = `${height}%`;
+                bar.title = `${dayLabel}: $${day.price.toFixed(2)}/kg`;
+                
+                const label = document.createElement('div');
+                label.className = 'forecast-label';
+                label.textContent = `${dayLabel} ${dateLabel}`;
+                bar.appendChild(label);
+                
+                chart.appendChild(bar);
+            });
+            
+            if (recommendation) {
+                recommendation.innerHTML = `
+                    <strong>📊 ${forecast.trend.toUpperCase()} Trend</strong><br>
+                    ${forecast.recommendation || 'No recommendation available'}
+                `;
+            }
+        }
+        
+        async function loadOfflineStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/mcp/offline/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    updateOfflineBadge(data);
+                }
+            } catch (error) {
+                console.error('Error loading offline stats:', error);
+            }
+        }
+        
+        function updateOfflineBadge(stats) {
+            const badge = document.getElementById('offline-badge');
+            if (badge) {
+                badge.textContent = stats.pending || 0;
+                badge.style.display = stats.pending > 0 ? 'inline-block' : 'none';
+            }
+            
+            // Update modal if open
+            const pendingEl = document.getElementById('offline-pending');
+            const syncedEl = document.getElementById('offline-synced');
+            const totalEl = document.getElementById('offline-total');
+            
+            if (pendingEl) pendingEl.textContent = stats.pending || 0;
+            if (syncedEl) syncedEl.textContent = stats.synced || 0;
+            if (totalEl) totalEl.textContent = stats.total || 0;
+        }
+        
+        async function loadSpoilageRisk() {
+            try {
+                // Get spoilage data from dashboard analysis
+                if (dashboardData && dashboardData.analysis) {
+                    const risk = dashboardData.analysis.spoilage_risk || 0.08;
+                    updateSpoilageGauge(risk);
+                }
+            } catch (error) {
+                console.error('Error loading spoilage risk:', error);
+            }
+        }
+        
+        function updateSpoilageGauge(risk) {
+            const riskPercent = Math.round(risk * 100);
+            const gaugeFill = document.getElementById('gauge-fill');
+            const gaugeValue = document.getElementById('gauge-value');
+            const riskLevel = document.getElementById('risk-level');
+            const recommendation = document.getElementById('spoilage-recommendation');
+            
+            if (gaugeFill) {
+                const rotation = (riskPercent / 100) * 180; // Half circle
+                gaugeFill.style.transform = `rotate(${rotation}deg)`;
+                
+                // Color based on risk
+                if (riskPercent > 50) {
+                    gaugeFill.style.borderTopColor = 'var(--danger)';
+                } else if (riskPercent > 25) {
+                    gaugeFill.style.borderTopColor = 'var(--warning)';
+                } else {
+                    gaugeFill.style.borderTopColor = 'var(--success)';
+                }
+            }
+            
+            if (gaugeValue) gaugeValue.textContent = `${riskPercent}%`;
+            
+            if (riskLevel) {
+                if (riskPercent > 50) {
+                    riskLevel.textContent = 'High';
+                    riskLevel.style.color = 'var(--danger)';
+                } else if (riskPercent > 25) {
+                    riskLevel.textContent = 'Medium';
+                    riskLevel.style.color = 'var(--warning)';
+                } else {
+                    riskLevel.textContent = 'Low';
+                    riskLevel.style.color = 'var(--success)';
+                }
+            }
+            
+            if (recommendation) {
+                if (riskPercent > 50) {
+                    recommendation.textContent = '🔴 Use refrigerated transport immediately';
+                } else if (riskPercent > 25) {
+                    recommendation.textContent = '⚠️ Monitor closely, consider faster route';
+                } else {
+                    recommendation.textContent = '✅ Risk acceptable with standard precautions';
+                }
+            }
+        }
+        
+        function showOfflineStats() {
+            const modal = document.getElementById('offline-modal');
+            if (modal) {
+                modal.style.display = 'block';
+                loadOfflineRequests();
+            }
+        }
+        
+        function closeOfflineModal() {
+            const modal = document.getElementById('offline-modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        async function loadOfflineRequests() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/mcp/offline/pending?limit=20`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const requests = await response.json();
+                    updateOfflineRequestsList(requests);
+                }
+            } catch (error) {
+                console.error('Error loading offline requests:', error);
+            }
+        }
+        
+        function updateOfflineRequestsList(requests) {
+            const list = document.getElementById('offline-requests-list');
+            if (!list) return;
+            
+            if (requests.length === 0) {
+                list.innerHTML = '<div style="text-align: center; opacity: 0.7; padding: 20px;">No pending requests</div>';
+                return;
+            }
+            
+            let html = '<h3 style="margin-bottom: 15px;">Pending Requests</h3>';
+            requests.forEach(req => {
+                const data = JSON.parse(req.data);
+                html += `
+                    <div style="padding: 10px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <div style="font-weight: 600;">${req.request_type}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 5px;">
+                            Created: ${new Date(req.created_at).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+        
+        // Language selector
+        document.getElementById('language-selector')?.addEventListener('change', function(e) {
+            const lang = e.target.value;
+            // In production, this would update all text on the page
+            console.log('Language changed to:', lang);
+            // You could implement full translation here
+        });
+        
+        // Forecast product selector
+        document.getElementById('forecast-product')?.addEventListener('change', function() {
+            loadPriceForecast();
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('offline-modal');
+            if (event.target == modal) {
+                closeOfflineModal();
+            }
+        }
+        
         // Initialize everything when the page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeRoutes();

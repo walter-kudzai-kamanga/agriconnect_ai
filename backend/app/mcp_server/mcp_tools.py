@@ -4,12 +4,34 @@ from app.models.schemas import (
     MarketData, TransporterProfile
 )
 from .spoilage_model import SpoilagePredictor
-from typing import List, Dict
+from app.tracking.gps_tracker import gps_tracker
+from app.ml.price_forecaster import price_forecaster
+from app.offline.offline_storage import OfflineStorage
+from app.i18n.translations import translator
+from typing import List, Dict, Optional
 import random
 from datetime import datetime, timedelta
+from pydantic import BaseModel
 
 router = APIRouter()
 spoilage_predictor = SpoilagePredictor()
+offline_storage = OfflineStorage()
+
+# New request models
+class GPSUpdateRequest(BaseModel):
+    job_id: str
+    lat: float
+    lon: float
+    speed: Optional[float] = None
+    heading: Optional[float] = None
+
+class PriceForecastRequest(BaseModel):
+    product: str
+    market: str
+    days: int = 7
+
+class LanguageRequest(BaseModel):
+    language: str  # 'en', 'sn', 'nd'
 
 # Mock data for demonstration
 MOCK_TRANSPORTERS = [
@@ -177,5 +199,98 @@ async def predict_spoilage_risk(
             "risk_level": "high" if risk_score > 0.7 else "medium" if risk_score > 0.3 else "low"
         }
         
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# New endpoints for enhanced features
+
+@router.post("/tracking/start")
+async def start_tracking(
+    job_id: str,
+    transporter_phone: str,
+    farmer_phone: str,
+    route_info: Dict
+):
+    """Start GPS tracking for a transport job"""
+    try:
+        result = gps_tracker.start_tracking(job_id, transporter_phone, farmer_phone, route_info)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/tracking/update")
+async def update_gps_location(request: GPSUpdateRequest):
+    """Update GPS location for a tracked job"""
+    try:
+        result = gps_tracker.update_location(
+            request.job_id,
+            request.lat,
+            request.lon,
+            request.speed,
+            request.heading
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/tracking/status/{job_id}")
+async def get_tracking_status(job_id: str):
+    """Get current tracking status for a job"""
+    try:
+        status = gps_tracker.get_tracking_status(job_id)
+        if not status:
+            raise HTTPException(status_code=404, detail="Tracking not found")
+        return status
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/tracking/active")
+async def get_all_active_trackings():
+    """Get all active tracking jobs"""
+    try:
+        return gps_tracker.get_all_active_trackings()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/forecast/price")
+async def forecast_price(request: PriceForecastRequest):
+    """Get price forecast for a product"""
+    try:
+        forecast = price_forecaster.forecast(
+            request.product,
+            request.market,
+            request.days
+        )
+        return forecast
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/offline/stats")
+async def get_offline_stats():
+    """Get offline storage statistics"""
+    try:
+        return offline_storage.get_stats()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/offline/pending")
+async def get_pending_requests(limit: int = 50):
+    """Get pending offline requests"""
+    try:
+        return offline_storage.get_pending_requests(limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/i18n/translate")
+async def translate_text(key: str, lang: str = "en"):
+    """Get translation for a key"""
+    try:
+        return {
+            "key": key,
+            "language": lang,
+            "translation": translator.translate(key, lang)
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

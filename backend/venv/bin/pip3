@@ -1,4 +1,4 @@
-#!/Users/user/Downloads/agriconnect-ai/backend/venv/bin/python3.11
+#!/home/deuce/agriconnect_ai/backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

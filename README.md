@@ -74,7 +74,54 @@ Storyboard
 Visual Demo - Map with moving vehicle icons, farmer input screen, alerts in local language.
 
 
-if time permits am to add
+## Feature Analysis & Recommendations
+
+A comprehensive analysis of necessary new features has been completed. See **[FEATURE_ANALYSIS.md](./FEATURE_ANALYSIS.md)** for detailed recommendations.
+
+### Key Recommended Features (Priority Order):
+
+**Critical Features:**
+1. **Offline-First Architecture** - Enable farmers to submit orders without internet, sync when connection available
+2. **Multi-Language Support** - Shona, Ndebele, and other local languages for USSD/SMS
+3. **Real-Time GPS Tracking** - Track produce in transit with SMS/USSD updates
+4. **Enhanced Spoilage Prediction** - ML-based model with multiple factors
+5. **Smart Alert System** - Proactive alerts for delays, spoilage risk, weather changes
+6. **Payment Integration** - Mobile money (EcoCash, OneMoney, M-Pesa) with escrow
+
+**High-Impact Features:**
+7. **Market Price Forecasting** - 3-7 day price predictions using time-series models
+8. **Voice Interface (IVR)** - Phone call-based interface for illiterate farmers
+9. **Rating & Review System** - Build trust between farmers and transporters
+10. **Multi-Stop Route Optimization** - Optimize routes with multiple pickups (TSP/VRP algorithms)
+11. **Cooperative Booking** - Multiple farmers share transport costs
+12. **Database Migration** - Move from SQLite to PostgreSQL for production scale
+
+**Advanced Features:**
+13. **Demand Prediction** - Predict market demand to reduce empty return trips
+14. **Return Trip Optimization** - Match return cargo to reduce empty trips by 40-50%
+15. **Historical Analytics Dashboard** - Insights from past operations
+16. **Quality Assurance Tracking** - Photo verification, quality checklists
+17. **Admin Dashboard** - Full visibility for NGOs and cooperatives
+18. **Market Integration APIs** - Connect to market management systems
+
+### Implementation Roadmap
+
+- **Phase 1 (Months 1-3)**: Critical features for basic functionality
+- **Phase 2 (Months 4-6)**: High-impact features for user adoption
+- **Phase 3 (Months 7-9)**: Advanced features for optimization
+- **Phase 4 (Months 10-12)**: Scale, performance, and ecosystem integration
+
+### Success Metrics
+
+- **30-50% reduction** in produce spoilage
+- **15-25% increase** in farmer income
+- **40-50% reduction** in empty return trips
+- **20-30% reduction** in transport costs
+- **10,000+ farmers** in first year
+
+---
+
+## Planned Features (Original List)
 
 * Add predictive spoilage modeling — AI predicts risk if delays occur.
 * Add market price forecasting for next 3 days using historical data.
